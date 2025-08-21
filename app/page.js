@@ -1,12 +1,14 @@
 ﻿"use client";
 import React, { useState, useEffect } from "react";
+import Zoom from "react-medium-image-zoom";
+import "react-medium-image-zoom/dist/styles.css";
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState("home");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [paymentModal, setPaymentModal] = useState(null); // "upi" | "bank" | null
-  const [copied, setCopied] = useState(""); // track copied text
+  const [paymentModal, setPaymentModal] = useState(null);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const tgLink = (plan) =>
     `https://t.me/ottboxsupport?text=Hello%2C%20I%27m%20interested%20in%20the%20${encodeURIComponent(
@@ -42,14 +44,10 @@ export default function Page() {
     }
   };
 
-  const handleCopy = (text) => {
-    navigator.clipboard.writeText(text);
-    setCopied(text);
-    setTimeout(() => setCopied(""), 2000);
-  };
-
   const navLinks = [
     { id: "home", name: "🏠 Home" },
+    { id: "pricing", name: "💰 Pricing" },
+    { id: "feedback", name: "⭐ Feedback" },
     {
       id: "telegram",
       name: "Telegram",
@@ -68,6 +66,27 @@ export default function Page() {
     { id: "guide", name: "📖 Guide" },
   ];
 
+  const reviews = [
+    { name: "haris", plan: "1 Year" },
+    { name: "Amrit singh", plan: "1 Year for 3 devices" },
+    { name: "Morin", plan: "1 Year" },
+    { name: "Kanchon", plan: "1 Year" },
+    { name: "Dhiraj", plan: "1 Year" },
+    { name: "Dharmesh Vadher", plan: "1 Year" },
+    { name: "Jashan Singh", plan: "1 Year for 2 devices" },
+    { name: "Vinit", plan: "1 Year" },
+    { name: "Siva Kumar", plan: "1 Year" },
+    { name: "Amit singh", plan: "1 Year" },
+    { name: "Awasthi", plan: "1 Year" },
+    { name: "Nikesh", plan: "1 Year" },
+    { name: "Zohaib", plan: "1 Year" },
+    { name: "Tekhum", plan: "1 Year" },
+    { name: "Sunny ETISALAT", plan: "1 Year" },
+    { name: "Vinay Sharma", plan: "1 Year" },
+    { name: "Setius", plan: "1 Year" },
+    { name: "Rineesh Aboobacker", plan: "1 Year" },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       {/* Navbar */}
@@ -81,11 +100,7 @@ export default function Page() {
         `}
       >
         <div className="flex items-center gap-2">
-          <img
-            src="/ottbox-logo.png"
-            alt="OttBox Logo"
-            className="w-10 h-10 object-contain"
-          />
+          <img src="/ottbox-logo.png" alt="OttBox Logo" className="w-10 h-10 object-contain" />
           <span className="text-xl font-bold text-purple-400">OttBox</span>
         </div>
 
@@ -94,7 +109,11 @@ export default function Page() {
             <button
               key={item.id}
               onClick={() =>
-                item.link ? item.link() : scrollToSection(item.id)
+                item.id === "feedback"
+                  ? setFeedbackOpen(true)
+                  : item.link
+                  ? item.link()
+                  : scrollToSection(item.id)
               }
               className={`transition-colors hover:text-white ${
                 activeSection === item.id ? "text-white font-bold" : ""
@@ -110,50 +129,24 @@ export default function Page() {
             onClick={() => setMenuOpen(!menuOpen)}
             className="text-gray-200 focus:outline-none"
           >
-            {menuOpen ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            )}
+            {menuOpen ? "✖" : "☰"}
           </button>
         </div>
       </nav>
 
       {menuOpen && (
-        <div className="md:hidden fixed top-16 left-0 w-full bg-gray-900/90 backdrop-blur-md shadow-lg flex flex-col items-center gap-4 py-4 z-40 animate-slideDown">
+        <div className="fixed top-16 left-0 w-full bg-gray-900/95 backdrop-blur-md shadow-lg p-6 flex flex-col gap-6 z-40">
           {navLinks.map((item) => (
             <button
               key={item.id}
               onClick={() =>
-                item.link ? item.link() : scrollToSection(item.id)
+                item.id === "feedback"
+                  ? setFeedbackOpen(true)
+                  : item.link
+                  ? item.link()
+                  : scrollToSection(item.id)
               }
-              className="flex items-center gap-2 text-gray-200 font-semibold hover:text-white"
+              className="text-gray-200 hover:text-white text-lg"
             >
               {item.icon} {item.name}
             </button>
@@ -181,60 +174,10 @@ export default function Page() {
           Choose Your Plan
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <PlanCard
-            title="1 Month"
-            color="purple"
-            price="₹199 / 9 AED"
-            tgLink={tgLink("1 Month")}
-            buttonText="Start Now"
-          />
-          <PlanCard
-            title="3 Months"
-            color="blue"
-            price="₹549 / 25 AED"
-            tgLink={tgLink("3 Months")}
-            buttonText="Buy Now"
-          />
-          <PlanCard
-            title="6 Months"
-            color="green"
-            price="₹1049 / 47 AED"
-            tgLink={tgLink("6 Months")}
-            buttonText="Subscribe"
-          />
-          <PlanCard
-            title="12 Months"
-            color="red"
-            price="₹1999 / 90 AED"
-            tgLink={tgLink("12 Months")}
-            buttonText="Get Access"
-            bestValue
-          />
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-16 px-6 max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-          What Our Users Say
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { name: "Rahul", text: "Amazing service, never had a downtime!" },
-            {
-              name: "Sara",
-              text: "Best value for money. Movies & live TV are smooth.",
-            },
-            { name: "Imran", text: "Customer support on Telegram is super quick 🚀" },
-          ].map((t, index) => (
-            <div
-              key={index}
-              className="bg-gray-900 p-6 rounded-2xl shadow-lg flex flex-col gap-4"
-            >
-              <p className="text-gray-300">“{t.text}”</p>
-              <span className="text-purple-400 font-semibold">- {t.name}</span>
-            </div>
-          ))}
+          <PlanCard title="1 Month" color="purple" price="₹199 / 9 AED" tgLink={tgLink("1 Month")} buttonText="Start Now" />
+          <PlanCard title="3 Months" color="blue" price="₹549 / 25 AED" tgLink={tgLink("3 Months")} buttonText="Buy Now" />
+          <PlanCard title="6 Months" color="green" price="₹1049 / 47 AED" tgLink={tgLink("6 Months")} buttonText="Subscribe" />
+          <PlanCard title="12 Months" color="red" price="₹1999 / 90 AED" tgLink={tgLink("12 Months")} buttonText="Get Access" bestValue />
         </div>
       </section>
 
@@ -259,6 +202,118 @@ export default function Page() {
         </div>
       </section>
 
+      {/* Payment Modal */}
+      {paymentModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex flex-col items-center justify-center p-6">
+          <button
+            onClick={() => setPaymentModal(null)}
+            className="self-end mb-4 text-white text-2xl font-bold"
+          >
+            ✖
+          </button>
+
+          {paymentModal === "upi" && (
+            <div className="bg-gray-900 p-6 rounded-xl shadow-lg w-full max-w-md text-center">
+              <h3 className="text-2xl font-bold mb-4 text-green-400">Pay via UPI</h3>
+              <Zoom>
+                <img
+                  src={"/upi-qr.png"}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "/upi-qr.jpg";
+                  }}
+                  alt="UPI QR Code"
+                  className="mx-auto w-48 h-48 object-contain bg-white rounded-lg p-2 shadow-lg cursor-zoom-in"
+                />
+              </Zoom>
+              <p className="mt-4 text-lg">
+                <span className="font-semibold">UPI ID:</span>{" "}
+                <button
+                  onClick={() => navigator.clipboard.writeText("Aryxn.677@okicici")}
+                  className="text-purple-400 hover:underline"
+                >
+                  Aryxn.677@okicici 📋
+                </button>
+              </p>
+            </div>
+          )}
+
+          {paymentModal === "bank" && (
+            <div className="bg-gray-900 p-6 rounded-xl shadow-lg w-full max-w-md text-center">
+              <h3 className="text-2xl font-bold mb-4 text-blue-400">Bank Transfer</h3>
+              <p className="mb-2">
+                <span className="font-semibold">Account Holder:</span> Bindu Rani
+              </p>
+              <p className="mb-2">
+                <span className="font-semibold">Bank:</span> Bank of Baroda
+              </p>
+              <p className="mb-2">
+                <span className="font-semibold">Account No:</span>{" "}
+                <button
+                  onClick={() => navigator.clipboard.writeText("25830100017611")}
+                  className="text-purple-400 hover:underline"
+                >
+                  25830100017611 📋
+                </button>
+              </p>
+              <p className="mb-2">
+                <span className="font-semibold">IFSC:</span>{" "}
+                <button
+                  onClick={() => navigator.clipboard.writeText("BARB0HANUMA")}
+                  className="text-purple-400 hover:underline"
+                >
+                  BARB0HANUMA 📋
+                </button>
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Feedback Modal */}
+      {feedbackOpen && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex flex-col items-center overflow-y-auto p-6">
+          <button
+            onClick={() => setFeedbackOpen(false)}
+            className="self-end mb-4 text-white text-2xl font-bold"
+          >
+            ✖
+          </button>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl">
+            {reviews.map((review, index) => (
+              <div
+                key={index}
+                className="bg-gray-900 p-4 rounded-xl shadow-lg hover:shadow-purple-500/30 transition-all"
+              >
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <Zoom>
+                    <img
+                      src={`/review_images/${index * 2 + 1}.png`}
+                      onError={(e) => (e.currentTarget.src = "/fallback.png")}
+                      alt={`${review.name} - 1`}
+                      className="rounded-lg w-full h-56 object-contain bg-black"
+                    />
+                  </Zoom>
+                  <Zoom>
+                    <img
+                      src={`/review_images/${index * 2 + 2}.png`}
+                      onError={(e) => (e.currentTarget.src = "/fallback.png")}
+                      alt={`${review.name} - 2`}
+                      className="rounded-lg w-full h-56 object-contain bg-black"
+                    />
+                  </Zoom>
+                </div>
+                <div className="mt-4 border-t border-gray-700 pt-3 text-center">
+                  <p className="text-lg font-semibold text-white">{review.name}</p>
+                  <p className="text-sm text-gray-400">{review.plan}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Floating Telegram Button */}
       <a
         href="https://t.me/ottboxsupport"
@@ -268,102 +323,10 @@ export default function Page() {
       >
         💬
       </a>
-
-      {/* Payment Modal */}
-      {paymentModal && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-gray-900 p-6 rounded-2xl shadow-xl w-80 relative">
-            <button
-              className="absolute top-2 right-2 text-gray-300 hover:text-white"
-              onClick={() => setPaymentModal(null)}
-            >
-              ✖
-            </button>
-
-            {paymentModal === "upi" && (
-              <div className="text-center">
-                <h3 className="text-xl font-bold mb-4 text-green-400">
-                  UPI Payment
-                </h3>
-                <a href="/upi-qr.jpg" target="_blank" rel="noopener noreferrer">
-                  <img
-                    src="/upi-qr.jpg"
-                    alt="Scan UPI QR"
-                    className="w-48 h-48 mx-auto mb-4 cursor-pointer hover:scale-110 transition-transform"
-                  />
-                </a>
-                <p className="text-gray-300">Scan QR or pay to:</p>
-                <div className="flex items-center justify-center gap-2 mt-1">
-                  <p className="text-white font-semibold">Aryxn.677@okicici</p>
-                  <button
-                    onClick={() => handleCopy("Aryxn.677@okicici")}
-                    className="text-sm bg-gray-700 px-2 py-1 rounded hover:bg-gray-600"
-                  >
-                    📋
-                  </button>
-                </div>
-                {copied === "Aryxn.677@okicici" && (
-                  <p className="text-green-400 text-sm mt-1">Copied!</p>
-                )}
-
-                <a
-                  href="/upi-qr.jpg"
-                  download="upi-qr.jpg"
-                  className="mt-3 inline-block bg-green-600 text-white px-4 py-2 rounded-lg shadow-md font-semibold hover:bg-green-700 transition"
-                >
-                  📥 Download QR
-                </a>
-              </div>
-            )}
-
-            {paymentModal === "bank" && (
-              <div className="text-center">
-                <h3 className="text-xl font-bold mb-4 text-blue-400">
-                  Bank Transfer
-                </h3>
-                <p className="text-gray-300">Account Name:</p>
-                <p className="text-white font-semibold mb-2">bindu rani</p>
-
-                <p className="text-gray-300">Account Number:</p>
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <p className="text-white font-semibold">25830100017611</p>
-                  <button
-                    onClick={() => handleCopy("25830100017611")}
-                    className="text-sm bg-gray-700 px-2 py-1 rounded hover:bg-gray-600"
-                  >
-                    📋
-                  </button>
-                </div>
-                {copied === "25830100017611" && (
-                  <p className="text-green-400 text-sm mb-2">Copied!</p>
-                )}
-
-                <p className="text-gray-300">IFSC Code:</p>
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <p className="text-white font-semibold">BARB0HANUMA</p>
-                  <button
-                    onClick={() => handleCopy("BARB0HANUMA")}
-                    className="text-sm bg-gray-700 px-2 py-1 rounded hover:bg-gray-600"
-                  >
-                    📋
-                  </button>
-                </div>
-                {copied === "BARB0HANUMA" && (
-                  <p className="text-green-400 text-sm mb-2">Copied!</p>
-                )}
-
-                <p className="text-gray-300">Bank Name:</p>
-                <p className="text-white font-semibold">Bank of Baroda</p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
 
-// PlanCard Component
 function PlanCard({ title, color, price, tgLink, buttonText, bestValue }) {
   const colorMap = {
     purple: {
