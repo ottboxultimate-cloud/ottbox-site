@@ -1,17 +1,14 @@
 ﻿"use client";
 import React, { useState, useEffect } from "react";
-import Zoom from "react-medium-image-zoom";
-import "react-medium-image-zoom/dist/styles.css";
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState("home");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [paymentModal, setPaymentModal] = useState(null);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
-  const tgLink = (plan) =>
-    `https://t.me/ottboxsupport?text=Hello%2C%20I%27m%20interested%20in%20the%20${encodeURIComponent(
+  const whatsappLink = (plan) =>
+    `https://wa.me/919251121721?text=Hi%20I%20am%20interested%20in%20the%20${encodeURIComponent(
       plan
     )}%20plan`;
 
@@ -22,10 +19,8 @@ export default function Page() {
 
       const home = document.getElementById("home")?.offsetTop || 0;
       const pricing = document.getElementById("pricing")?.offsetTop || 0;
-      const guide = document.getElementById("guide")?.offsetTop || 0;
 
-      if (scrollY >= guide - 100) setActiveSection("guide");
-      else if (scrollY >= pricing - 100) setActiveSection("pricing");
+      if (scrollY >= pricing - 100) setActiveSection("pricing");
       else setActiveSection("home");
     };
 
@@ -49,8 +44,8 @@ export default function Page() {
     { id: "pricing", name: "💰 Pricing" },
     { id: "feedback", name: "⭐ Feedback" },
     {
-      id: "telegram",
-      name: "Telegram",
+      id: "whatsapp",
+      name: "WhatsApp",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -58,12 +53,16 @@ export default function Page() {
           fill="currentColor"
           viewBox="0 0 24 24"
         >
-          <path d="M9.999 15.17 8.53 12.5l7.27-4.33-8.42 3.82-3.88-1.4c-.84-.3-.86-1.47.02-1.8l15.47-6.02c.7-.27 1.47.34 1.25 1.07l-4.5 15.47c-.23.78-1.21 1.05-1.82.5l-3.9-3.64z" />
+          <path d="M12 0C5.373 0 0 4.968 0 11.1c0 2.176.697 4.2 1.89 5.922L0 24l7.244-1.888A12.57 12.57 0 0 0 12 22.2c6.627 0 12-4.968 12-11.1S18.627 0 12 0zm0 20.4c-1.493 0-2.943-.288-4.295-.85l-.307-.13-4.296 1.121 1.143-4.028-.2-.31C3.191 14.5 2.7 12.854 2.7 11.1c0-5.018 4.176-9.1 9.3-9.1s9.3 4.082 9.3 9.1-4.176 9.4-9.3 9.4zm5.263-6.93c-.278-.139-1.642-.812-1.895-.904-.253-.093-.437-.14-.622.14-.184.278-.715.904-.876 1.088-.161.185-.323.208-.6.069-.278-.14-1.173-.43-2.236-1.372-.826-.735-1.382-1.64-1.544-1.918-.161-.278-.017-.43.122-.57.126-.125.278-.323.416-.485.139-.161.184-.278.278-.463.093-.185.046-.347-.023-.485-.069-.139-.622-1.503-.853-2.062-.224-.54-.451-.466-.622-.475l-.531-.009c-.185 0-.485.069-.739.347s-.97.947-.97 2.308.994 2.676 1.131 2.861c.139.185 1.954 2.98 4.735 4.18.662.286 1.178.456 1.581.584.664.211 1.268.182 1.745.111.532-.079 1.642-.671 1.873-1.318.231-.647.231-1.202.162-1.318-.069-.116-.254-.185-.531-.323z" />
         </svg>
       ),
-      link: () => window.open("https://t.me/ottboxsupport", "_blank"),
+      link: () => window.open("https://wa.me/919251121721", "_blank"),
     },
-    { id: "guide", name: "📖 Guide" },
+    {
+      id: "guide",
+      name: "📖 Guide",
+      link: () => window.open("https://linktr.ee/ottboxtvonline", "_blank"),
+    },
   ];
 
   const reviews = [
@@ -100,7 +99,11 @@ export default function Page() {
         `}
       >
         <div className="flex items-center gap-2">
-          <img src="/ottbox-logo.png" alt="OttBox Logo" className="w-10 h-10 object-contain" />
+          <img
+            src="/ottbox-logo.png"
+            alt="OttBox Logo"
+            className="w-12 h-12 object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.8)] hover:scale-110 transition-transform duration-300"
+          />
           <span className="text-xl font-bold text-purple-400">OttBox</span>
         </div>
 
@@ -159,6 +162,11 @@ export default function Page() {
         id="home"
         className="text-center pt-28 pb-16 px-4 bg-gradient-to-r from-purple-700 via-indigo-700 to-blue-700"
       >
+        <img
+          src="/ottbox-logo.png"
+          alt="OttBox Logo"
+          className="mx-auto w-40 h-40 object-contain mb-6 drop-shadow-[0_0_25px_rgba(139,92,246,0.8)] animate-pulse"
+        />
         <h1 className="text-4xl md:text-6xl font-extrabold mb-6">
           🏠 Your All-in-One Entertainment Solution 🎬📺
         </h1>
@@ -174,10 +182,10 @@ export default function Page() {
           Choose Your Plan
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <PlanCard title="1 Month" color="purple" price="₹199 / 9 AED" tgLink={tgLink("1 Month")} buttonText="Start Now" />
-          <PlanCard title="3 Months" color="blue" price="₹549 / 25 AED" tgLink={tgLink("3 Months")} buttonText="Buy Now" />
-          <PlanCard title="6 Months" color="green" price="₹1049 / 47 AED" tgLink={tgLink("6 Months")} buttonText="Subscribe" />
-          <PlanCard title="12 Months" color="red" price="₹1999 / 90 AED" tgLink={tgLink("12 Months")} buttonText="Get Access" bestValue />
+          <PlanCard title="1 Month" color="purple" price="₹199 / 9 AED" waLink={whatsappLink("1 Month")} buttonText="Start Now" />
+          <PlanCard title="3 Months" color="blue" price="₹549 / 25 AED" waLink={whatsappLink("3 Months")} buttonText="Buy Now" />
+          <PlanCard title="6 Months" color="green" price="₹1049 / 47 AED" waLink={whatsappLink("6 Months")} buttonText="Subscribe" />
+          <PlanCard title="12 Months" color="red" price="₹1999 / 90 AED" waLink={whatsappLink("12 Months")} buttonText="Get Access" bestValue />
         </div>
       </section>
 
@@ -188,87 +196,19 @@ export default function Page() {
         </h2>
         <div className="flex flex-wrap justify-center items-center gap-6">
           <button
-            onClick={() => setPaymentModal("upi")}
+            onClick={() => window.open("https://wa.me/919251121721?text=Hi%20I%20want%20to%20pay%20via%20UPI", "_blank")}
             className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg font-semibold"
           >
             UPI
           </button>
           <button
-            onClick={() => setPaymentModal("bank")}
+            onClick={() => window.open("https://wa.me/919251121721?text=Hi%20I%20want%20to%20pay%20via%20Bank%20Transfer", "_blank")}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg font-semibold"
           >
             Bank Transfer
           </button>
         </div>
       </section>
-
-      {/* Payment Modal */}
-      {paymentModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex flex-col items-center justify-center p-6">
-          <button
-            onClick={() => setPaymentModal(null)}
-            className="self-end mb-4 text-white text-2xl font-bold"
-          >
-            ✖
-          </button>
-
-          {paymentModal === "upi" && (
-            <div className="bg-gray-900 p-6 rounded-xl shadow-lg w-full max-w-md text-center">
-              <h3 className="text-2xl font-bold mb-4 text-green-400">Pay via UPI</h3>
-              <Zoom>
-                <img
-                  src={"/upi-qr.png"}
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = "/upi-qr.jpg";
-                  }}
-                  alt="UPI QR Code"
-                  className="mx-auto w-48 h-48 object-contain bg-white rounded-lg p-2 shadow-lg cursor-zoom-in"
-                />
-              </Zoom>
-              <p className="mt-4 text-lg">
-                <span className="font-semibold">UPI ID:</span>{" "}
-                <button
-                  onClick={() => navigator.clipboard.writeText("Aryxn.677@okicici")}
-                  className="text-purple-400 hover:underline"
-                >
-                  Aryxn.677@okicici 📋
-                </button>
-              </p>
-            </div>
-          )}
-
-          {paymentModal === "bank" && (
-            <div className="bg-gray-900 p-6 rounded-xl shadow-lg w-full max-w-md text-center">
-              <h3 className="text-2xl font-bold mb-4 text-blue-400">Bank Transfer</h3>
-              <p className="mb-2">
-                <span className="font-semibold">Account Holder:</span> Bindu Rani
-              </p>
-              <p className="mb-2">
-                <span className="font-semibold">Bank:</span> Bank of Baroda
-              </p>
-              <p className="mb-2">
-                <span className="font-semibold">Account No:</span>{" "}
-                <button
-                  onClick={() => navigator.clipboard.writeText("25830100017611")}
-                  className="text-purple-400 hover:underline"
-                >
-                  25830100017611 📋
-                </button>
-              </p>
-              <p className="mb-2">
-                <span className="font-semibold">IFSC:</span>{" "}
-                <button
-                  onClick={() => navigator.clipboard.writeText("BARB0HANUMA")}
-                  className="text-purple-400 hover:underline"
-                >
-                  BARB0HANUMA 📋
-                </button>
-              </p>
-            </div>
-          )}
-        </div>
-      )}
 
       {/* Feedback Modal */}
       {feedbackOpen && (
@@ -287,22 +227,18 @@ export default function Page() {
                 className="bg-gray-900 p-4 rounded-xl shadow-lg hover:shadow-purple-500/30 transition-all"
               >
                 <div className="grid grid-cols-2 gap-4 mb-4">
-                  <Zoom>
-                    <img
-                      src={`/review_images/${index * 2 + 1}.png`}
-                      onError={(e) => (e.currentTarget.src = "/fallback.png")}
-                      alt={`${review.name} - 1`}
-                      className="rounded-lg w-full h-56 object-contain bg-black"
-                    />
-                  </Zoom>
-                  <Zoom>
-                    <img
-                      src={`/review_images/${index * 2 + 2}.png`}
-                      onError={(e) => (e.currentTarget.src = "/fallback.png")}
-                      alt={`${review.name} - 2`}
-                      className="rounded-lg w-full h-56 object-contain bg-black"
-                    />
-                  </Zoom>
+                  <img
+                    src={`/review_images/${index * 2 + 1}.png`}
+                    onError={(e) => (e.currentTarget.src = "/fallback.png")}
+                    alt={`${review.name} - 1`}
+                    className="rounded-lg w-full h-56 object-contain bg-black"
+                  />
+                  <img
+                    src={`/review_images/${index * 2 + 2}.png`}
+                    onError={(e) => (e.currentTarget.src = "/fallback.png")}
+                    alt={`${review.name} - 2`}
+                    className="rounded-lg w-full h-56 object-contain bg-black"
+                  />
                 </div>
                 <div className="mt-4 border-t border-gray-700 pt-3 text-center">
                   <p className="text-lg font-semibold text-white">{review.name}</p>
@@ -314,12 +250,12 @@ export default function Page() {
         </div>
       )}
 
-      {/* Floating Telegram Button */}
+      {/* Floating WhatsApp Button */}
       <a
-        href="https://t.me/ottboxsupport"
+        href="https://wa.me/919251121721?text=Hi%20I%20am%20interested%20in%20your%20plans"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-full shadow-lg transition"
+        className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg transition"
       >
         💬
       </a>
@@ -327,7 +263,7 @@ export default function Page() {
   );
 }
 
-function PlanCard({ title, color, price, tgLink, buttonText, bestValue }) {
+function PlanCard({ title, color, price, waLink, buttonText, bestValue }) {
   const colorMap = {
     purple: {
       border: "border-purple-600",
@@ -383,7 +319,7 @@ function PlanCard({ title, color, price, tgLink, buttonText, bestValue }) {
         </span>
       </div>
       <a
-        href={tgLink}
+        href={waLink}
         target="_blank"
         rel="noopener noreferrer"
         className={`text-white font-semibold py-3 rounded-lg text-center transition-all transform hover:scale-105 shadow-lg animate-pulse ${colorMap[color].bg}`}
